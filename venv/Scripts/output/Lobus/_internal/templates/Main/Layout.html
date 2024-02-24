@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="static\images\71295.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="static/css/Zene/page.css">
+    <sript src="./static/JS/control.js"></sript>
+    <script src="./static/JS/Watch_Thombnail.JS"></script>
+    <script src="./static/JS/Watch_ProfilPic.js"></script>
+    <script src="./static/JS/Music_player.js"></script>
+    <script src="https://kit.fontawesome.com/23cecef777.js" crossorigin="anonymous"></script>
+    <!-- <link rel="stylesheet" href="./static/node_modules/bootstrap/dist/css/bootstrap.css"> -->
+    <link rel="stylesheet" href="./static/css/search_engine.css">   
+</head>
+<body>
+    <div class="cl_pl" id="exit_pl" onclick="cl_pl()"></div>
+    <div class="op_pl" id="op_pl">
+      <span style="margin-left: 90%; cursor: pointer;" onclick="cl_pl()" class="fa fa-times"></span>
+      <div id="pl_cont"></div>
+    </div>
+
+    <div class="exit_add_playlist" id="exit_watch_playlist" onclick="close_playlist()"></div>
+    <div class="watch_playlist_modul" id="watch_playlist">
+      <div>
+        <span style="margin-left: 90%; cursor: pointer;" onclick="close_playlist()" class="fa fa-times"></span>
+        <div id="watch_container"></div>
+      </div>
+    </div>
+
+    <div class="exit_add_playlist" id="exit_playlist" onclick=" add_playlist_close()"></div>
+    <div class="add_playlist_modul" id="add_playlist_modul">
+      <div>
+        <span style="margin-left: 90%; cursor: pointer;" onclick="add_playlist_close()" class="fa fa-times"></span>
+        <form action="{{ url_for('add_playlist') }}" method="POST" enctype="multipart/form-data">
+          <table>
+            <tr>
+              <td>
+                <input type="text" name="Playlist_name">
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input type="text" name="Descript">
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input type="file" name="playlist_img">
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input type="submit" value="Make">
+              </td>
+            </tr>
+          </table>
+        </form>
+      </div>
+    </div>
+    <div class="overlay" id="overlay" onclick="closeModal()"></div>
+    <div class="modal" id="modal">
+        <div>
+            <span style="margin-left: 90%; cursor: pointer;" onclick="closeModal()" class="fa fa-times"></span>
+            <form action="{{ url_for('add_music') }}" method="POST" enctype="multipart/form-data">
+
+                <table>
+                    <tr>
+                        <td>
+                            <p>Song Name:</p><input type="text" name="Song_Name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>By:</p><input type="text" name="by"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Picture:</label> <input type="file"  name="images" accept=".png .jpg">
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Music File:</lebel> 
+                            <input type="file" name="song_data" accept=".mp3">
+                            
+                        </td>
+                    </tr>
+                </table>
+                <button><input type="submit"></button>
+            </form>
+        </div>
+    </div>
+    <div class="sidebar">
+        <div class="logo">
+            <pre class="logo-text">
+               _____           _______                   _____                    _____                    _____          
+              /\    \         /::\    \                 /\    \                  /\    \                  /\    \         
+             /::\____\       /::::\    \               /::\    \                /::\____\                /::\    \        
+            /:::/    /      /::::::\    \             /::::\    \              /:::/    /               /::::\    \       
+           /:::/    /      /::::::::\    \           /::::::\    \            /:::/    /               /::::::\    \      
+          /:::/    /      /:::/~~\:::\    \         /:::/\:::\    \          /:::/    /               /:::/\:::\    \     
+         /:::/    /      /:::/    \:::\    \       /:::/__\:::\    \        /:::/    /               /:::/__\:::\    \    
+        /:::/    /      /:::/    / \:::\    \     /::::\   \:::\    \      /:::/    /                \:::\   \:::\    \   
+       /:::/    /      /:::/____/   \:::\____\   /::::::\   \:::\    \    /:::/    /      _____    ___\:::\   \:::\    \  
+      /:::/    /      |:::|    |     |:::|    | /:::/\:::\   \:::\ ___\  /:::/____/      /\    \  /\   \:::\   \:::\    \ 
+     /:::/____/       |:::|____|     |:::|    |/:::/__\:::\   \:::|    ||:::|    /      /::\____\/::\   \:::\   \:::\____\
+     \:::\    \        \:::\    \   /:::/    / \:::\   \:::\  /:::|____||:::|____\     /:::/    /\:::\   \:::\   \::/    /
+      \:::\    \        \:::\    \ /:::/    /   \:::\   \:::\/:::/    /  \:::\    \   /:::/    /  \:::\   \:::\   \/____/ 
+       \:::\    \        \:::\    /:::/    /     \:::\   \::::::/    /    \:::\    \ /:::/    /    \:::\   \:::\    \     
+        \:::\    \        \:::\__/:::/    /       \:::\   \::::/    /      \:::\    /:::/    /      \:::\   \:::\____\    
+         \:::\    \        \::::::::/    /         \:::\  /:::/    /        \:::\__/:::/    /        \:::\  /:::/    /    
+          \:::\    \        \::::::/    /           \:::\/:::/    /          \::::::::/    /          \:::\/:::/    /     
+           \:::\    \        \::::/    /             \::::::/    /            \::::::/    /            \::::::/    /      
+            \:::\____\        \::/____/               \::::/    /              \::::/    /              \::::/    /       
+             \::/    /         ~~                      \::/____/                \::/____/                \::/    /        
+              \/____/                                   ~~                       ~~                       \/____/     
+            </pre>
+        </div>
+  
+        <div class="navigation">
+          <ul>
+              <li>
+              <a href="{{ url_for('control')}}">
+                <span class="fa fa-home"></span>
+                <span class="text">Home</span>
+              </a>
+              </li>
+  
+
+  
+            <li onclick="op_pl(`{{playlists}}`)">
+              <a>
+                <span class="fa fas fa-book"></span>
+                <span class="text">Your Library</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+  
+        <div class="navigation">
+          <ul>
+           <li >
+              <a onclick="openModal()">
+                  <span class="fa fas fa-plus"></span>
+                  <span class="text">Add Music</span>
+              </a>
+           </li>
+            <li>
+              <a onclick="add_playlist_open()">
+                <span class="fa fas fa-plus-square"></span>
+                <span class="text">Create Playlist</span>
+              </a>
+            </li>
+  
+            <li>
+              <a href="#">
+                <span class="fa fas fa-heart"></span>
+                <span class="text">Liked Songs</span>
+              </a>
+            </li>
+            <hr>
+            {% for i in range(playlists|length) %}
+              <li>
+                <a onclick="watch_playlist(`{{playlists[i].Name}}`, `{{playlists[i].Descript}}`, `{{playlists[i].Date}}`, `{{playlists[i].ID}}`)">
+                  <span class="text">{{playlists[i].Name}}</span>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class="main-container">
+        <div class="topbar">
+          <div class="prev-next-buttons">
+            <button onclick="history.back()" type="button" class="fa fas fa-chevron-left"></button>
+            <button onclick="history.forward()" type="button" class="fa fas fa-chevron-right"></button>
+          </div>
+          <div id="Alert">
+          </div>
+          <div class="navbar">
+
+          <a href="{{url_for('Profil')}}">  
+            <table>
+                <tr>
+                    <td>
+                        <img class="profil" id="image" src="" alt="Kép">
+                        <script>loadImageWithDataParam('{{data[3]}}'); </script>
+                    </td>
+                    <td>
+                        <lable><strong>{{data[0]}}</strong></lable>
+                    </td>
+                </tr>
+            </table>
+          </a>
+
+
+            <form action="{{url_for('logout')}}">
+              <button><img class="exit" src="static/images/free-exit-.png"></button>
+            </form>
+          </div>
+        </div>
+        {% block content %} {% endblock %}
+        
+        <!-- Lejátszási léc -->
+    <script src='https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp'></script>
+    <script src="./static/JS/add_song.js"></script>
+
+</body>
+</html>

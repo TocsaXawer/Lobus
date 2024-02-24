@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Orbitron&display=swap" rel="stylesheet" />
+        <link href="static/css/control.css" rel="stylesheet" />
+        <title>{{data[0]}}</title>
+    </head>
+    <body>
+        <div class="v26_17">
+            <form action="{{url_for('logout')}}">
+                <button>logout</button>
+            </form>
+            <div class="v26_27"><img id="image" src="" alt="Kép"></div>
+            <span class="v26_28">{{data[0]}}</span>
+            <span class="v26_29">Id: {{data[3]}} <br> Rang: {{data[2]}}</span>
+            <div class="v26_36">{{data[3]}}</div>
+            <a href="#" class="v26_37"></a>
+        </div>
+        <script>
+            // Blob letöltése a szerverről
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/show_image/{{data[3]}}', true); // Az URL-t az aktuális szerver elérési útjára állítsd be
+    
+            xhr.responseType = 'blob';
+    
+            xhr.onload = function() {
+                if (this.status === 200) {
+                    var blob = this.response;
+                    var url = URL.createObjectURL(blob);
+    
+                    // Blob megjelenítése egy <img> elemként
+                    var image = document.getElementById('image');
+                    image.src = url;
+                }
+            };
+    
+            xhr.send();
+        </script>
+    </body>
+</html>

@@ -1,0 +1,22 @@
+{% extends "Page.html" %}
+<div class="container">
+    <div class="spotify-playlists">
+        <h2>Zenék</h2>
+        <div class="list">
+            {% for music in musics %}
+                <div class="item">
+                    <img id="thumbnail{{ loop.index }}" />
+                    <script>downloadAndDisplayImage("{{ url_for('show_thombnail', id=music[0]) }}", 'thumbnail{{ loop.index }}');</script>
+                    <div class="play">
+                        <span class="fa fa-play"></span>
+                    </div>
+                    <h4>{{music[1]}}</h4>
+                    <p>{{music[2]}}</p>
+                    <form action="{{url_for('delete_music',  id=music[0])}}">
+                        <button class="Trash "></button>
+                    </form>
+                </div>
+            {% endfor %}
+            
+        </div>
+    </div>

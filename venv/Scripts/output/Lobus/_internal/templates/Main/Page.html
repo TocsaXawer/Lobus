@@ -1,0 +1,185 @@
+{% extends "Main/Layout.html"%}
+{% block title %}Music{% endblock %}   
+{% block content %}
+
+    <input type="text" class="search" id="search-box"  placeholder="Keresés itt"/>
+    <table class="live-search-list" id="search-results">
+        <!-- A keresés eredményei itt jelennek meg -->
+    </table>
+    <div class="add_song_to_playlist" id="exit_song_to_playlist" onclick=" add_song_to_playlist()"></div>
+    <div class="add_playlist_to_song_modul" id="add_playlist_to_song_modul">
+      <div>
+        <span style="margin-left: 90%; cursor: pointer;" onclick="add_song_to_playlist_close()" class="fa fa-times"></span>
+        <h1 id="song_title"></h1>
+        <table id="list_item">
+        </table>
+      </div>
+    </div>
+    <script src="./static/JS/jqery.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+            $('#search-box').on('keyup', function () {
+                var searchTerm = $(this).val().toLowerCase();
+                if (searchTerm.length >= 1) {
+                    $.ajax({
+                        type: 'GET',
+                        url: '/search',  // A Flask nézet URL-je
+                        data: {query: searchTerm},
+                        success: function (data) {
+                            var resultsList = $('#search-results');
+                            resultsList.empty();
+                            data.videos.forEach(function (video) {
+                                var thumbnailUrl = video.thumbnails[0].url;
+                                
+                                if(video.from === "YouTube"){
+                                    resultsList.append('<tr><td><img class="thombnail-search" src="' + thumbnailUrl + '"></td><td><label>' + video.title + '</label></td><td><form action="{{ url_for("down") }}" method="POST"><input type="hidden" name="url" value="' + video.link + '"><button type="submit" class="btn-icon"><i class="fas fa-cloud-upload-alt"></i></button></form></td></tr>');
+                                }else if(video.from === "Local") {
+                                    var ok = video.id;
+                                    console.log(ok);
+                                    var image = `/show_thombnail/${ok}`;
+                                    var music = `/play/${ok}`
+                                    resultsList.append('<tr><td><img class="thombnail-search" src="'+image+'") }}"></td><td><label>' + video.auth + ' - ' + video.title + '</label></td> <td> <div class="search-play" onclick="play([{id:\''+video.id+'\',name:\''+video.title+'\', auth:\''+ video.auth +'\', file:\'/music/'+video.id+'\'}], 0)")><span class="fa fa-play"></span></div></td><td><div onclick="add_to_playlist(`'+ video.id +'`, `{{j_playlist}}`)"><i class="fa fa-solid fa-plus"></i></div></td>  </tr>');
+                                } 
+                            });
+                        }
+                    });
+                } else {
+                    var resultsList = $('#search-results');
+                    resultsList.empty();
+                }
+            });
+        });
+    </script>
+
+
+    <div class="spotify-playlists">
+        <h2>Zenék</h2>
+        <div class="list">
+            <div id="music-list" onload="myFunction(`{{musics}}`)"></div>
+             {% for music in musics %}
+                <div class="item">
+                    <img class="thumbnail" id="thumbnail{{ loop.index }}" src="./static/images/no_load.jpg"/>
+                    <script>downloadAndDisplayImage("{{ url_for('show_thombnail', id=music.id) }}", 'thumbnail{{ loop.index }}');</script>
+                    <div class="play" onclick="play([
+                            {
+                                id: '{{music.id}}' ,
+                                name: '{{music.name}}',
+                                auth:'{{music.auth}}',
+                                file:'/music/{{music.id}}'
+                            }], 0)">
+                        <span class="fa fa-play"></span>
+                    </div>
+                    <h4>{{music.name}}</h4>
+                    <p>{{music.auth}}</p>
+                    <table>
+                        <tr>
+                            <td class="Button_del">
+                                <a onclick="give_delet_alert('Delete', '{{music.name}} by {{music.auth}}')" href="{{url_for('delete_music',  id=music.id)}}">
+                                    <button class="Trash "></button>
+                                </a>
+                            </td>
+                            <td class="space_holder"></td>
+                            <td class="Button_add">
+                                <a onclick="add_to_playlist(`{{music.id}}`, `{{j_playlist}}`)">
+                                    <button class="Add"></button>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            {% endfor %}
+                
+        </div>
+    </div>
+    <audio id="audioPlayer">
+        Your browser does not support the audio element.
+    </audio>
+    <div class="labléc">
+        <div class="flex gap-5 items-center hidden lg:flex">
+        <div class="w-14 h-14 bg-gary-500 hover:cursor-pointer">
+            <img class="play_music" id="song_img" loading="lazy" src="./static/images/no_load.jpg">
+        </div>
+        <div class="flex flex-col gap-1">
+            <p id="music_name_player" class="text-neutral-300 font-medium hover:text-white hover:underline hover:cursor-pointer">No play music</p>
+            <p id="music_by_player" class="text-xs text-neutral-400 hover:text-white hover:underline hover:cursor-pointer"></p>
+        </div>
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-neutral-300 hover:text-white hover:underline">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+            </svg>
+        </div>
+        </div>
+        <div class="flex-col items-center gap-1 flex">
+        <div class="flex items-center gap-6">
+            <div class="text-neutral-500">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 hover:text-white hover:underline">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+            </svg>
+
+            </div>
+            <div id="back"  class="text-neutral-300">
+            <svg  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 rotate-180 hover:text-white hover:underline">
+                <path  stroke-linecap="round" stroke-linejoin="round" d="M3 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062A1.125 1.125 0 013 16.81V8.688zM12.75 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062a1.125 1.125 0 01-1.683-.977V8.688z" />
+            </svg>
+            </div>
+            <div class="text-white">
+            <script src="https://kit.fontawesome.com/23cecef777.js" crossorigin="anonymous"></script>
+            <i id="playButton" class="fa fa-play" style="color: #ffffff;">  </i>
+
+            </div>
+            <div id="next"  class="text-neutral-300">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 hover:text-white hover:underline">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062A1.125 1.125 0 013 16.81V8.688zM12.75 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062a1.125 1.125 0 01-1.683-.977V8.688z" />
+            </svg>
+            </div>
+            <div class="text-neutral-500">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 hover:text-white hover:underline">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3" />
+            </svg>
+            </div>
+        </div>
+        <div  class="flex gap-2 items-center justify-between text-xs">
+            <div id="progressContainer">
+                <div id="progressBar"></div>
+            </div>
+
+            
+            <div id="timelineContainer" class="flex gap-2 items-center justify-between text-xs">
+                <span id="currentTime" class="text-neutral-400">0:00</span>
+                <div id="timeline" class="grow bg-neutral-600 relative" >
+                    <div id="playhead" style="height:5px; border-radius:5px; " class="bg-neutral-300 relative">
+                        <div class="absolute right-0 bg-white w-3 h-3 rounded-full -mt-1"></div>
+                    </div>
+                </div>
+                <span id="duration" class="text-neutral-400">0:00</span>
+            </div>
+        </div>
+        </div>
+        <div class="flex gap-3 items-center hidden lg:flex">
+        <div class="text-neutral-300">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" />
+            </svg>
+        </div>
+        <div class="text-neutral-300">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+            </svg>
+        </div>
+        <div class="flex items-center gap-2 text-neutral-300">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+            </svg>
+            <div class="" style="width:100px;">
+            <input  type="range" id="volumeControl" min="0" max="1" step="0.1" value="0.5" oninput="setVolume(this.value)" style="height:3px; border-radius:5px; width:75px; --tw-ring-color: #ffffff;" >
+            </div>
+        </div>
+        <div class="text-neutral-300">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+            </svg>
+
+        </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Orbitron&display=swap" rel="stylesheet" />
+        <link href="static/css/home.css" rel="stylesheet" />
+        <link href="static/node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+        <title>Document</title>
+    </head>
+    <body>
+        <button class="v23_14" onclick="openLogin()">
+            <span class="v23_13">Login</span>
+        </button>
+        <span class="v23_15">Create by No_One</span>
+
+        <div id="Login" class="login">
+            <span class="close cursor" onclick="closeLogin()">&times;</span>
+            <div class="login-content">
+                <form action="{{ url_for('home')}}" method = "post">
+                    <input class="usr" placeholder="Username" name = "usr" type="text"><p></p>
+                    <input class="pass" placeholder="Password" name = "pass" type="password"><p></p>
+                    <input class="sub" value="Login" type="submit">
+                </form>
+            </div>
+        </div>
+        <script>
+            function openLogin() {
+                document.getElementById("Login").style.display="block";
+            }
+
+            function closeLogin() {
+                document.getElementById("Login").style.display = "none";
+            }
+        </script>
+    </body>
+</html>

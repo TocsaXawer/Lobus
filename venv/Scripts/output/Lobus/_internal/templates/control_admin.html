@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Orbitron&display=swap" rel="stylesheet" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link href="static/css/control.css" rel="stylesheet" />
+        <title>{{data[0]}}</title>
+    </head>
+    <body>
+        <div class="v26_17">
+            <form action="{{url_for('logout')}}">
+                <button>logout</button>
+            </form>
+            <div class="v26_27"><button id="pic"><img id="image" alt="Kép"></button></div>
+            <span class="v26_28">{{data[0]}}</span>
+            <span class="v26_29">Id: {{data[3]}} <br> Rang: {{data[2]}}</span>
+            <div class="v26_36">
+                <div id="centerDIV">
+                    <div class="divFloat">
+                        <input type="button" id="btClose" class="btClose" value="x" />
+                        <form action="{{ url_for('add_user') }}" method="POST">
+                            <p style="text-align: left; padding:20px 0;">User ID
+                                <input type="number" name="add_id" style="width:50px;"  value="{{ len + 1 }}" />
+                            </p>
+                            <p style="text-align: left; padding:20px 0;">User Name
+                                <input type="text" name="user_add" style="width:300px;" maxlength="100" />
+                            </p>
+                            <p style="text-align: left; padding:20px 0;">Password <br>
+                                <input type="text" name="passw_add" style="width:300px;" maxlength="100" />
+                            </p>
+                            <label for="add_rank">User rank:</label>
+                            <select id="add_rank" name="add_rank">
+                                <option value="User">User</option>
+                                <option value="Admin">Admin</option>
+                            </select>
+                            <p><input type="submit" class="btGetPass" value="Add User" /></p>
+                        </form>
+                    </div>
+                </div>                
+                <table>
+                    <tr>
+                        <button id="btClick">Add</button>
+                    </tr>
+                    <tr>
+                        <th>id</th>
+                        <th>User Name</th>
+                        <th>Password</th>
+                        <th>Profil pic</th>
+                        <th>rang</th>
+                    </tr>
+                    {% for i in range(0, len) %}
+                        <tr>
+                            <td> {{user[i][0]}} </td>
+                            <td> {{user[i][1]}} </td>
+                            <td> {{user[i][2]}} </td>
+                            <td>  </td>
+                            <td> {{user[i][4]}} </td>
+                            <td></td>
+                            <td>
+                                <form action="{{url_for('delete',  id=user[i][0])}}" >
+                                    <button>Delete</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form action="{{ url_for('edit', id=user[i][0]) }}">
+                                    <button>Edit</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <a href="#" class="v26_37">Tools</a>
+        </div>
+        <script>
+        window.addEventListener('click', function (e) {
+            if (document.getElementById('btClick').contains(e.target)) {
+            document.getElementById('centerDIV').style.display = 'block';
+            }
+            
+            if (document.getElementById('btClose').contains(e.target)) {
+            document.getElementById('centerDIV').style.display = 'none';
+            }
+        })
+        </script>
+        <script>
+        windows.addEventListener('click', function (e) {
+            if (document.getElementById('pic').contains(e.target)) {
+            document.getElementById('pic_add').style.display = 'block';
+            }
+
+            if (document.getElementById('pic_close').contains(e.target)) {
+                document.getElementById('pic_add').style.display = 'none';
+            }
+        })
+        </script>
+        <script>
+            // Blob letöltése a szerverről
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/show_image/{{data[3]}}', true); // Az URL-t az aktuális szerver elérési útjára állítsd be
+    
+            xhr.responseType = 'blob';
+    
+            xhr.onload = function() {
+                if (this.status === 200) {
+                    var blob = this.response;
+                    var url = URL.createObjectURL(blob);
+    
+                    // Blob megjelenítése egy <img> elemként
+                    var image = document.getElementById('image');
+                    image.src = url;
+                }
+            };
+    
+            xhr.send();
+        </script>
+        
+    </body>
+</html>

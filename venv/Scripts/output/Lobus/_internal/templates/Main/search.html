@@ -1,0 +1,47 @@
+{% extends "Main/Layout.html"%}
+{% block title %}Explorer{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="input-group col-sm-7  input-group-lg">
+        <input type="text" class="search" id="search-box"  placeholder="Keresés itt"/>
+     </div>
+</div>
+
+<table class="live-search-list" id="search-results">
+    <!-- A keresés eredményei itt jelennek meg -->
+</table>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        $('#search-box').on('keyup', function () {
+            var searchTerm = $(this).val().toLowerCase();
+            if (searchTerm.length >= 1) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/search',  // A Flask nézet URL-je
+                    data: {query: searchTerm},
+                    success: function (data) {
+                        var resultsList = $('#search-results');
+                        resultsList.empty();
+                        data.videos.forEach(function (video) {
+                            var thumbnailUrl = video.thumbnails[0].url;
+                            
+                            if(video.from === "YouTube"){
+                                resultsList.append('<tr><td><img class="thombnail" src="' + thumbnailUrl + '"></td><td><label>' + video.title + '</label></td><td><form action="{{url_for("down")}}" method="POST"><input type="hidden" name=url value="'+video.link+'"><input type="submit" value="Download"></form></td></tr>');
+                            }else if(video.from === "Local") {
+                                var ok = video.id;
+                                console.log(ok);
+                                var image = `/show_thombnail/${ok}`;
+                                var music = `/play/${ok}`
+                                resultsList.append('<tr><td><img class="thombnail" src="'+image+'") }}"></td><td><label>' + video.auth + ' - ' + video.title + '</label></td><td><a href="'+music+'"><input type="submit" value="Play"></a></td></tr>');
+                            } 
+                        });
+                    }
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}
