@@ -1,0 +1,115 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  font-size: 14px;
+  width: 100%;
+  height: 6in;
+  background: url("../images/v23_12.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  opacity: 1;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  overflow: hidden;
+}
+
+
+.v23_14 {
+  width: 93px;
+  height: 35px;
+  background: url("../images/v23_14.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  opacity: 1;
+  position: absolute;
+  top: 21px;
+  left: 1318px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  overflow: hidden;
+}
+.v23_13 {
+  width: 74px;
+  color: rgba(0,0,0,1);
+  position: absolute;
+  top: 0px;
+  left: 8px;
+  font-family: Orbitron;
+  font-weight: Regular;
+  font-size: 24px;
+  opacity: 1;
+  text-align: left;
+}
+.v23_15 {
+  width: 110px;
+  color: rgba(0,0,0,1);
+  position: absolute;
+  top: 24px;
+  left: 16px;
+  font-family: Orbitron;
+  font-weight: Regular;
+  font-size: 12px;
+  opacity: 1;
+  text-align: left;
+}
+
+.login {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.7);
+}
+.login-content {
+  display: flex;
+  margin-inline: 45%;
+  height: 50%;
+  width: 60%;
+  margin-top: 10%;
+}
+
+form{
+  background-color: rgba(0,0,0,0.7);
+  margin-top: 10%;
+}
+
+.usr{
+  margin-top: 10px;
+  margin-inline: 5px;
+}
+
+.pass{
+  margin-inline: 5px;
+}
+
+.sub{
+  margin-right: 50px;
+}
+
+
+.close {
+  color: white;
+  position: absolute;
+  top: 10px;
+  right: 25px;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #999;
+  text-decoration: none;
+  cursor: pointer;
+}

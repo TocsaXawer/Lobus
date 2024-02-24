@@ -1,0 +1,45 @@
+{% extends "Main/Layout.html"%}
+{% block title %}Profil - Zene{% endblock %}   
+{% block content %} 
+    <script src="./static/JS/Watch_ProfilPic.js"></script>
+    <div class="container left-5" >
+        <div class="Data">
+            <h2 style="margin-top: 2%;"><strong>Felhasználó Aadatok:</strong></h2>
+            <table style="margin-left: 3%;">
+                <tr>
+                    <td>User Id:</td>
+                    <td>{{ data[3]}} </td>
+                </tr>
+                <tr>
+                    <td>Username:</td>
+                    <td>{{data[0]}}</td>
+                </tr>
+            </table>
+        </div>
+        <script>downloadAndDisplayImage("{{ url_for('show_image', id=data[3]) }}", 'thumbnail{{ data[3] }}');</script>
+        <div style="margin-left: 70%; margin-top: -2%; display: flex;" class="image-container" id="thumbnail-container">
+            <img  id="thumbnail{{ data[3] }}" src="" class="w-60 h-60 image">
+        </div>
+        <div class="overlay" id="lightbox">
+            <div class="lightbox">
+                <span style="margin-left: 95%; cursor: pointer;" class="fa fa-times" onclick="closeLightbox()"></span>
+                <form method="POST" action="{{url_for('update', id=data[3])}}" enctype="multipart/form-data">
+                    <input type="file" name="image">
+                    <input type="submit" value="Update">
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        const thumbnailContainer = document.getElementById("thumbnail-container");
+        const lightbox = document.getElementById("lightbox");
+
+        thumbnailContainer.addEventListener("click", () => {
+            lightbox.style.display = "flex"; // Megjeleníti a lightbox-ot
+        });
+
+        function closeLightbox() {
+            lightbox.style.display = "none"; // Elrejti a lightbox-ot
+        }
+    </script>
+{% endblock %}

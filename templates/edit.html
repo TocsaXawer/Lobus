@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Orbitron&display=swap" rel="stylesheet" />
+        <link href="/static/css/control.css" rel="stylesheet" />
+        <title>Edit - {{id}}</title>
+    </head>
+    <body>
+        <div class="v26_17">
+            <form action="{{url_for('control')}}">
+                <button>Control_room</button>
+            </form>
+            <div class="v26_36">
+                <table style="margin: 0 auto;">
+                    <form action="{{url_for('edit', id=id)}}" method="post" enctype="multipart/form-data">
+                        
+                        <tr>
+                            <td>
+                                <label style="color: white;">username:</label><input name="change_username" type="text" placeholder="{{data[0][1]}}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            
+                                <label style="color: white;">Password:</label><input name="change_pass" type="text">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select id="change_rank" name="change_rank">
+                                    {% if data[0][4] == "User" %}
+                                        <option value="Admin" >Admin</option>
+                                        <option value="User" selected>User</option>
+                                    {% elif data[0][4] == "Admin"%}
+                                        <option value="Admin" selected>Admin</option>
+                                        <option value="User">User</option>
+                                    {%else%}
+                                    <option value="Admin">Admin</option>
+                                    <option value="User">User</option>
+                                    {% endif %}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="submit" value="Except">
+                            </td>
+                        </tr>
+                    </form>
+                </table>
+                <form method="POST" action="{{url_for('update', id=id)}}" enctype="multipart/form-data">
+                    <input type="file" name="image">
+                    <input type="submit" value="Update">
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
